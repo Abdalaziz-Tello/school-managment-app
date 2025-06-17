@@ -5,7 +5,7 @@ from typing import Optional
 class SMSGateway:
     def __init__(self):
         self.api_key = os.getenv("SMS_API_KEY", "demo-key")
-        self.base_url = "https://sms-gateway-demo.com/api/v1/send"  # Replace with actual SMS gateway URL
+        self.base_url = "https://10.33.34.116:8082/api/v1/send"  # Replace with actual SMS gateway URL
 
     def send_sms(self, phone_number: str, message: str) -> bool:
         """
@@ -16,8 +16,8 @@ class SMSGateway:
             response = requests.post(
                 self.base_url,
                 json={
-                    "api_key": self.api_key,
-                    "phone": phone_number,
+                    "api_key": "5d37f28a-9689-4b07-860e-3e5f7736f2e7",
+                    "phone": "0939281171",
                     "message": message
                 },
                 timeout=10

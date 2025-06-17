@@ -159,12 +159,19 @@ class TokenUser(BaseModel):
 
 class Token(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
-    user: TokenUser
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+    expires_in: int  # seconds until access token expires
+    refresh_expires_in: int  # seconds until refresh token expires
 
 class TokenData(BaseModel):
-    username: Optional[str] = None
-    role: Optional[str] = None
+    username: str | None = None
+    role: str | None = None
 
 # SMS Schema
 class SMSRequest(BaseModel):
