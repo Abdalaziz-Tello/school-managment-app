@@ -7,7 +7,7 @@ import string
 from ..database import get_db
 from ..models import models
 from ..schemas import schemas
-from ..core.security import get_password_hash
+from ..core.auth import get_password_hash
 from ..core.auth import get_current_user
 from ..core.sms import sms_gateway
 
@@ -26,7 +26,7 @@ def generate_password(length: int = 12) -> str:
     alphabet = string.ascii_letters + string.digits
     return ''.join(secrets.choice(alphabet) for _ in range(length))
 
-@router.post("/users/teacher", response_model=schemas.User)
+@router.post("/users/teacher", response_model=schemas.UserCreationResponse)
 async def create_teacher(
     user: schemas.UserCreate,
     current_user: models.User = Depends(verify_admin),
@@ -50,9 +50,22 @@ async def create_teacher(
     # Send credentials via SMS
     sms_gateway.send_credentials(user.phone_number, user.username, user.password)
     
-    return db_user
+    # Return user with password for admin reference
+    response_user = schemas.User(
+        id=db_user.id,
+        username=db_user.username,
+        phone_number=db_user.phone_number,
+        role=db_user.role,
+        is_active=db_user.is_active
+    )
+    
+    return {
+        "user": response_user,
+        "generated_password": user.password,
+        "message": "Teacher created successfully. Password has been sent via SMS."
+    }
 
-@router.post("/users/parent", response_model=schemas.User)
+@router.post("/users/parent", response_model=schemas.UserCreationResponse)
 async def create_parent(
     user: schemas.UserCreate,
     current_user: models.User = Depends(verify_admin),
@@ -76,9 +89,22 @@ async def create_parent(
     # Send credentials via SMS
     sms_gateway.send_credentials(user.phone_number, user.username, user.password)
     
-    return db_user
+    # Return user with password for admin reference
+    response_user = schemas.User(
+        id=db_user.id,
+        username=db_user.username,
+        phone_number=db_user.phone_number,
+        role=db_user.role,
+        is_active=db_user.is_active
+    )
+    
+    return {
+        "user": response_user,
+        "generated_password": user.password,
+        "message": "Parent created successfully. Password has been sent via SMS."
+    }
 
-@router.post("/users/bus-mentor", response_model=schemas.User)
+@router.post("/users/bus-mentor", response_model=schemas.UserCreationResponse)
 async def create_bus_mentor(
     user: schemas.UserCreate,
     current_user: models.User = Depends(verify_admin),
@@ -102,7 +128,20 @@ async def create_bus_mentor(
     # Send credentials via SMS
     sms_gateway.send_credentials(user.phone_number, user.username, user.password)
     
-    return db_user
+    # Return user with password for admin reference
+    response_user = schemas.User(
+        id=db_user.id,
+        username=db_user.username,
+        phone_number=db_user.phone_number,
+        role=db_user.role,
+        is_active=db_user.is_active
+    )
+    
+    return {
+        "user": response_user,
+        "generated_password": user.password,
+        "message": "Bus mentor created successfully. Password has been sent via SMS."
+    }
 
 @router.post("/classes", response_model=schemas.Class)
 async def create_class(

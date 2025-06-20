@@ -173,6 +173,12 @@ class TokenData(BaseModel):
     username: str | None = None
     role: str | None = None
 
+# Admin User Creation Response Schema
+class UserCreationResponse(BaseModel):
+    user: User
+    generated_password: str
+    message: str
+
 # SMS Schema
 class SMSRequest(BaseModel):
     phone_number: str

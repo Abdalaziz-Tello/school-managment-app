@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import engine, Base
 from .routers import admin, teacher, parent, bus_mentor, auth, websocket
+from .routers import admin_auth, teacher_auth, parent_auth, bus_mentor_auth
 from .init_db import init_db
 
 # Create database tables and initialize admin account
@@ -14,6 +15,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
@@ -23,8 +25,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Include authentication routers
 app.include_router(auth.router)
+app.include_router(admin_auth.router)
+app.include_router(teacher_auth.router)
+app.include_router(parent_auth.router)
+app.include_router(bus_mentor_auth.router)
+
+# Include feature routers
 app.include_router(admin.router)
 app.include_router(teacher.router)
 app.include_router(parent.router)
