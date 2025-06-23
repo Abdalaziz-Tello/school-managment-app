@@ -1,6 +1,6 @@
 # Environment variables
-.env
-.env.*
+# .env
+# .env.*
 
 # Python
 __pycache__/
@@ -23,40 +23,40 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Virtual Environment
+# Virtual environments
 venv/
 env/
 ENV/
-.venv/
+env.bak/
+venv.bak/
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
-.DS_Store
+*~
 
 # Database
 *.db
-*.sqlite3
 *.sqlite
+*.sqlite3
+data/
 
 # Logs
 *.log
 logs/
-log/
 
-# Coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Alembic
 alembic/versions/*.py

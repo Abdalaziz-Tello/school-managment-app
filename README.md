@@ -1,149 +1,154 @@
-# School Management System API
+# Noah Eco System - School Management System
 
-A FastAPI-based backend system for school management with role-based access control.
+A FastAPI-based school management system with role-based access control for administrators, teachers, parents, and bus mentors.
 
 ## Features
 
-- Role-based authentication (Admin, Teacher, Parent, Bus Mentor)
-- JWT-based authentication
-- SQLite database
-- Student attendance tracking
-- Homework and activity management
-- Bus tracking functionality
-- SMS notification capability
+- **Role-based Authentication**: Admin, Teacher, Parent, and Bus Mentor roles
+- **Student Management**: Track students, classes, and attendance
+- **Activity Management**: Homework and activity submissions
+- **Bus Tracking**: Real-time bus location tracking
+- **Real-time Communication**: WebSocket support for live updates
+- **RESTful API**: Complete API documentation with Swagger UI
 
-## Setup
+## Tech Stack
 
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+- **Backend**: FastAPI (Python)
+- **Database**: SQLite
+- **Authentication**: JWT tokens
+- **Real-time**: WebSockets
+- **Deployment**: Render
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## Local Development
 
-3. Set up environment variables for admin initialization:
-```bash
-# Linux/macOS
-export ADMIN_USERNAME="your_admin_username"
-export ADMIN_PASSWORD="your_secure_password"
-export ADMIN_PHONE="your_phone_number"
+### Prerequisites
 
-# Windows (CMD)
-set ADMIN_USERNAME=your_admin_username
-set ADMIN_PASSWORD=your_secure_password
-set ADMIN_PHONE=your_phone_number
+- Python 3.9+
+- pip
 
-# Windows (PowerShell)
-$env:ADMIN_USERNAME="your_admin_username"
-$env:ADMIN_PASSWORD="your_secure_password"
-$env:ADMIN_PHONE="your_phone_number"
-```
+### Setup
 
-4. Initialize the admin user:
-```bash
-python app/init_admin.py
-```
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd noah_eco_system
+   ```
 
-5. Start the application:
-```bash
-uvicorn app.main:app --reload
-```
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-## Authentication
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Admin Login
-1. Send a POST request to `/login` with the following body:
-```json
-{
-    "username": "your_admin_username",
-    "password": "your_admin_password"
-}
-```
+4. **Set environment variables**
+   ```bash
+   export ADMIN_PASSWORD="your_admin_password"
+   export SECRET_KEY="your_secret_key"
+   ```
 
-2. The response will contain your JWT token:
-```json
-{
-    "access_token": "your.jwt.token",
-    "token_type": "bearer"
-}
-```
+5. **Run the application**
+   ```bash
+   uvicorn app.main:app --reload
+   ```
 
-3. Include this token in all subsequent requests:
-```
-Authorization: Bearer your.jwt.token
-```
+6. **Access the API**
+   - API: http://localhost:8000
+   - Documentation: http://localhost:8000/docs
+   - ReDoc: http://localhost:8000/redoc
 
-### Other Users
-All users (Admin, Teacher, Parent, Bus Mentor) use the same `/login` endpoint. The system automatically handles permissions based on the user's role.
+### Default Admin Credentials
 
-## Docker Setup
+- **Username**: admin
+- **Password**: admin (or the value set in ADMIN_PASSWORD environment variable)
 
-1. Build the Docker image:
-```bash
-docker build -t school-management-api .
-```
+## Deployment on Render
 
-2. Run the container with environment variables:
-```bash
-docker run -d -p 8000:8000 \
-  -e ADMIN_USERNAME=your_admin_username \
-  -e ADMIN_PASSWORD=your_secure_password \
-  -e ADMIN_PHONE=your_phone_number \
-  school-management-api
-```
+### Method 1: Using render.yaml (Recommended)
+
+1. **Push your code to GitHub**
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
+   ```
+
+2. **Deploy on Render**
+   - Go to [Render Dashboard](https://dashboard.render.com)
+   - Click "New +" → "Blueprint"
+   - Connect your GitHub repository
+   - Render will automatically detect the `render.yaml` file
+   - Click "Apply" to deploy
+
+### Method 2: Manual Deployment
+
+1. **Create a new Web Service**
+   - Go to [Render Dashboard](https://dashboard.render.com)
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+
+2. **Configure the service**
+   - **Name**: noah-eco-system
+   - **Environment**: Python
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+
+3. **Add Environment Variables**
+   - `ADMIN_PASSWORD`: Your admin password
+   - `SECRET_KEY`: A secure secret key
+
+4. **Deploy**
+   - Click "Create Web Service"
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `ADMIN_PASSWORD` | Admin user password | Yes |
+| `SECRET_KEY` | JWT secret key | Yes |
 
 ## API Documentation
 
-Once the application is running, visit:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+Once deployed, access the API documentation at:
+- **Swagger UI**: `https://your-app-name.onrender.com/docs`
+- **ReDoc**: `https://your-app-name.onrender.com/redoc`
 
-## Testing
+## Database
 
-Run tests using pytest:
-```bash
-pytest
-```
+The application uses SQLite for both local development and production. The database file is stored at `./data/school.db` and is automatically created when the application starts.
 
 ## Project Structure
 
 ```
-.
+noah_eco_system/
 ├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── database.py
-│   ├── init_admin.py
-│   ├── models/
-│   ├── schemas/
-│   ├── routers/
-│   ├── core/
-│   └── tests/
-├── requirements.txt
-├── Dockerfile
-└── README.md
+│   ├── core/           # Core functionality (auth, security, etc.)
+│   ├── models/         # Database models
+│   ├── routers/        # API routes
+│   ├── schemas/        # Pydantic schemas
+│   ├── database.py     # Database configuration
+│   ├── main.py         # FastAPI application
+│   └── init_db.py      # Database initialization
+├── alembic/            # Database migrations
+├── data/               # SQLite database
+├── requirements.txt    # Python dependencies
+├── render.yaml         # Render deployment config
+├── Procfile           # Alternative deployment config
+└── runtime.txt        # Python version specification
 ```
 
-## Security Notes
+## Contributing
 
-- Passwords are hashed using SHA-256
-- JWT tokens expire after 30 minutes
-- All sensitive operations require proper authentication
-- Role-based access control is strictly enforced
-- Admin credentials must be set via environment variables
-- All API endpoints use proper authorization headers
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## Environment Variables
+## License
 
-Create a `.env` file with the following variables:
-```
-SECRET_KEY=your-secret-key
-SMS_API_KEY=your-sms-api-key
-ADMIN_USERNAME=your_admin_username
-ADMIN_PASSWORD=your_secure_password
-ADMIN_PHONE=your_phone_number
-``` 
+This project is licensed under the MIT License. 

@@ -1,7 +1,7 @@
 import os
 from sqlalchemy.orm import Session
 
-from .database import engine, Base, SessionLocal
+from .database import engine, SessionLocal, Base
 from .models.models import User
 from .core.auth import get_password_hash
 
